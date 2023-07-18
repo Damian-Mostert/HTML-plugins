@@ -567,11 +567,86 @@ export function Sliders() {
     view.addEventListener('touchmove', handleTouchMoveVertical);
   });
 }
-
+export function BannerContainer(){
+  (document.querySelectorAll('*[app-container]')||[]).forEach((element) => {
+    const banner = element.querySelector("*[banner]")
+    const app = element.querySelector("*[app]")
+    const bannerConfStr = banner.getAttribute('banner')
+    const conf = {
+      align:"top",
+      height:"80px",
+      small:{
+        on:"1000",
+        align:"top",
+        height:"60px",
+      }
+    }
+    function get_op(t){
+      if(t == 'top'||t == 'bottom')return'height'
+      if(t == 'left'||t=='right')return'width'
+      return''
+    }
+    function get_opi_op(t){
+      if(t == 'top'||t == 'bottom')return'width'
+      if(t == 'left'||t=='right')return'height'
+      return''
+    }
+    var sml_splited = bannerConfStr.split("small:")
+    var c = null
+    var small_c = null
+    if(sml_splited?.[1]){
+      c = sml_splited[0].split(',')
+      small_c = sml_splited[1].split(',')
+    }else
+      c = sml_splited[0].split(',')
+    if(c?.[0])conf.align = c?.[0]
+    if(c?.[1])conf.height = c?.[1]
+    if(small_c?.[0])conf.small.on = small_c?.[0]
+    if(small_c?.[1])conf.small.align = small_c?.[1]
+    if(small_c?.[2])conf.small.height = small_c?.[2]
+    function SetNormal(){
+      banner.style = `
+        position:absolute;
+        ${conf.align}:0;
+        ${get_op(conf.align)}:${conf.height};
+        ${get_opi_op(conf.align)}:100%;
+      `
+      app.style = `
+        position:absolute;
+        ${conf.align}:${conf.height};
+        ${get_op(conf.align)}:calc(100% - ${conf.height});
+        ${get_opi_op(conf.align)}:100%;
+      `
+    }
+    function SetSmall(){
+      banner.style = `
+        position:absolute;
+        ${conf.small.align}:0;
+        ${get_op(conf.small.align)}:${conf.small.height};
+        ${get_opi_op(conf.small.align)}:100%;
+      `
+      app.style = `
+        position:absolute;
+        ${conf.small.align}:${conf.small.height};
+        ${get_op(conf.small.align)}:calc(100% - ${conf.small.height});
+        ${get_opi_op(conf.small.align)}:100%;
+      `
+    }
+    function Set(){
+      if ((window.innerWidth <= Number(conf.small.on)))
+        SetSmall()
+      else
+        SetNormal()
+    }
+    window.addEventListener('resize',Set)
+    Set()
+  })
+}
 export default function Plugins() {
   InView();
   ClickMenus();
   HoverMenus();
   Scroll();
   Sliders();
+  BannerContainer();
 }
