@@ -1,7 +1,20 @@
 # HTML-plugins cheatsheet
 
 ```html
-<div>
+<!--scrollabal div with banner-->
+<div app-container style="
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+">
+  <!--set banner-->
+  <div banner="top,80px small:1000,left,70px">
+    BANNER
+  </div>
+  <!--main app-->
+  <div app>
     <!--menu options, menus should work inside each other-->
     <div click-menu>
       <button title>click me</button>
@@ -86,6 +99,7 @@
       </div>
     </div>
     <button next>next</button>
+  </div>
   </div>
 </div>
 ```
