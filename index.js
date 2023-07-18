@@ -387,12 +387,11 @@ export function Sliders() {
     const prev_button = element.querySelector('*[prev]');
     var type = 'vertical';
     var view = element.querySelector('*[vertical-view]');
-
     if (!view) {
       view = element.querySelector('*[horozontal-view]');
       type = 'horozontal';
     }
-
+    view.scrollLeft = view.scrollTop = 0
     if (!view)
       throw new Error('slider requires horozontal-view or vertical-view');
 
@@ -449,7 +448,6 @@ export function Sliders() {
           break;
       }
     }
-
     if (next_button)
       next_button.addEventListener('click', next_slide);
 
@@ -660,6 +658,17 @@ export function NavigationPanes(){
     })
   })
 }
+export function BoxPad(){
+  document.querySelectorAll('*[box-pad]').forEach((element) => {
+    var inner_padding = element.getAttribute('box-pad')
+    element.style = `
+      position:relative;
+      width:calc(100% - calc(${inner_padding}) * 2);
+      height:calc(100% - calc(${inner_padding}) * 2);
+      padding:${inner_padding};
+    `
+  })
+}
 export default function Plugins() {
   InView();
   ClickMenus();
@@ -667,5 +676,6 @@ export default function Plugins() {
   Scroll();
   Sliders();
   BannerContainer();
-  NavigationPanes()
+  NavigationPanes();
+  BoxPad();
 }
