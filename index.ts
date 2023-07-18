@@ -544,6 +544,23 @@ export function BannerContainer(){
     Set()
   })
 }
+export function NavigationPanes(){
+  document.querySelectorAll('*[navigation-pane]').forEach((element:any) => {
+    const navControl = element.querySelector('*[navigation]')
+    const children:any = Array.from(element.querySelector('*[panes]')?.children) || []
+    children.master = element.querySelector('*[master]')
+    Array.from(navControl.children).forEach((element:any) => {
+      if(element.getAttribute('open')){
+        element.addEventListener('click',()=>{
+          for(let child of children)child.hidden=true
+          children[element.getAttribute('open')].hidden = false
+        })
+      }
+      for(let child of children)child.hidden=true
+      if(children.master)children.master.hidden = false
+    })
+  })
+}
 export default function Plugins(){
   InView()
   ClickMenus()
@@ -551,4 +568,5 @@ export default function Plugins(){
   Scroll()
   Sliders()
   BannerContainer()
+  NavigationPanes()
 }
