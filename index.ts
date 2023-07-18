@@ -38,6 +38,10 @@ export function HoverMenus(){
   /*hover-menu styles*/
   *[hover-menu] *[title]{cursor:pointer}
   *[hover-menu] *[options].hidden{display: none}
+  *[absolute-hover-menu]{}
+  *[absolute-hover-menu] *[title]{cursor:pointer}
+  *[absolute-hover-menu] *[options]{display: none}
+  *[absolute-hover-menu]:hover *[options]{display:block}
   `;
   document.head.appendChild(styleElement)
   var menus_listeners_array:{ title:Element|null;options:Element|null }[]=[];
