@@ -307,28 +307,41 @@ export function Sliders(){
     Array.from(view.children).forEach((element:any) => element.classList.add('full-slider-view'))
     var LEFT = 0
     var TOP = 0
-    function next_slide(){
-      if(type == 'vertical'){
-        scrollToTopSmoothly(view,TOP+=view.getBoundingClientRect().height,500)
-        scrollToClosestElementTop(view)
-        if(TOP<0)TOP=0
-      }else{
-        scrollToLeftSmoothly(view,LEFT+=view.getBoundingClientRect().width,500)
-        scrollToClosestElementLeft(view)
-        if(LEFT<0)LEFT=0
+    function next_slide() {
+      if (type === 'vertical') {
+        TOP += view.getBoundingClientRect().height;
+        const maxScrollTop = (view.parentElement.scrollHeight - 1) * view.getBoundingClientRect().height;
+        TOP = Math.min(TOP, maxScrollTop);
+        scrollToTopSmoothly(view, TOP, 500);
+        scrollToClosestElementTop(view);
+        if (TOP < 0) TOP = 0;
+      } else {
+        LEFT += view.getBoundingClientRect().width;
+        const maxScrollLeft = (view.parentElement.scrollWidth - 1) * view.getBoundingClientRect().width;
+        LEFT = Math.min(LEFT, maxScrollLeft);
+        scrollToLeftSmoothly(view, LEFT, 500);
+        scrollToClosestElementLeft(view);
+        if (LEFT < 0) LEFT = 0;
       }
     }
-    function prev_slide(){
-      if(type == 'vertical'){
-        scrollToTopSmoothly(view,TOP-=view.getBoundingClientRect().height,500)
-        scrollToClosestElementTop(view)
-        if(TOP<0)TOP=0
-      }else{
-        scrollToLeftSmoothly(view,LEFT-=view.getBoundingClientRect().width,500)
-        scrollToClosestElementLeft(view)
-        if(LEFT<0)LEFT=0
+    function prev_slide() {
+      if (type === 'vertical') {
+        TOP -= view.getBoundingClientRect().height;
+        TOP = Math.max(TOP, 0);
+        const maxScrollTop = view.getBoundingClientRect().height*(view.children.length-2);
+        TOP = Math.min(TOP, maxScrollTop);
+        scrollToTopSmoothly(view, TOP, 500);
+        scrollToClosestElementTop(view);
+      } else {
+        LEFT -= view.getBoundingClientRect().width;
+        LEFT = Math.max(LEFT, 0);
+        const maxScrollLeft = view.getBoundingClientRect().width*(view.children.length-2);
+        LEFT = Math.min(LEFT, maxScrollLeft);
+        scrollToLeftSmoothly(view, LEFT, 500);
+        scrollToClosestElementLeft(view);
       }
     }
+
     function handleStop(container:any) {
       switch (dir) {
         case direction.Up: case direction.Left:
