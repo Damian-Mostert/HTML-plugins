@@ -376,7 +376,7 @@ export function Sliders(){
       prev_button.addEventListener('click',prev_slide)
     var t:any
     function handleRight(container:any){
-      container.scrollLeft+=10;
+      container.scrollLeft-=10;
       dir = direction.Left
       if(t)clearTimeout(t)
       t = setTimeout(() => {
@@ -384,7 +384,7 @@ export function Sliders(){
       },100);
     }
     function handleLeft(container:any){
-      container.scrollLeft-=10
+      container.scrollLeft+=10
       dir = direction.Right
       if(t)clearTimeout(t)
       t = setTimeout(() => {
