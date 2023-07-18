@@ -20,8 +20,8 @@ export function ClickMenus(){
   document.head.appendChild(styleElement)
   var menus_listeners_array:{ title:Element|null;options:Element|null }[]=[];
   (document.querySelectorAll('*[click-menu]')||[]).forEach((menu:Element)=>menus_listeners_array.push({
-    title:menu.querySelector('*[title]')as Element|null,
-    options:menu.querySelector('*[options]')as Element|null
+    title:menu.querySelector('*[title]')as HTMLDivElement,
+    options:menu.querySelector('*[options]')as HTMLDivElement
   }))
   for (const menu of menus_listeners_array)menu.options?.classList.add('hidden')
   window.addEventListener('click',event=>{
@@ -36,12 +36,26 @@ export function HoverMenus(){
   const styleElement = document.createElement('style');
   styleElement.textContent = `
   /*hover-menu styles*/
-  *[hover-menu]{}
   *[hover-menu] *[title]{cursor:pointer}
-  *[hover-menu] *[options]{display: none}
-  *[hover-menu]:hover *[options]{display:block}
+  *[hover-menu] *[options].hidden{display: none}
   `;
   document.head.appendChild(styleElement)
+  var menus_listeners_array:{ title:Element|null;options:Element|null }[]=[];
+  (document.querySelectorAll('*[hover-menu]')||[]).forEach((menu:Element)=>menus_listeners_array.push({
+    title:menu.querySelector('*[title]')as HTMLDivElement,
+    options:menu.querySelector('*[options]')as HTMLDivElement
+  }))
+  for (const menu of menus_listeners_array){
+    menu.title?.addEventListener("mouseover",() =>menu.options?.classList.remove('hidden'))
+    menu.options?.classList.add('hidden')
+  }
+  window.addEventListener('click',event=>{
+    for (const menu of menus_listeners_array)
+      if (menu?.title?.contains(event.target as Node) || menu?.options?.contains(event.target as Node))
+        menu.options?.classList.remove('hidden')
+      else if(!menu.options?.classList?.contains('hidden'))
+        menu.options?.classList.add('hidden')
+  })
 }
 enum direction{
   Up,
