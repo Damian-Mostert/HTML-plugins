@@ -45,23 +45,37 @@ export function ClickMenus() {
   });
 }
 
-export function HoverMenus() {
+export function HoverMenus(){
   const styleElement = document.createElement('style');
   styleElement.textContent = `
-    /*hover-menu styles*/
-    *[hover-menu] {}
-    *[hover-menu] *[title] { cursor: pointer; }
-    *[hover-menu] *[options] { display: none; }
-    *[hover-menu]:hover *[options] { display: block; }
+  /*hover-menu styles*/
+  *[hover-menu] *[title]{cursor:pointer}
+  *[hover-menu] *[options].hidden{display: none}
   `;
-  document.head.appendChild(styleElement);
+  document.head.appendChild(styleElement)
+  var menus_listeners_array=[];
+  (document.querySelectorAll('*[hover-menu]')||[]).forEach((menu)=>menus_listeners_array.push({
+    title:menu.querySelector('*[title]'),
+    options:menu.querySelector('*[options]')
+  }))
+  for (const menu of menus_listeners_array){
+    menu.title?.addEventListener("mouseover",() =>menu.options?.classList.remove('hidden'))
+    menu.options?.classList.add('hidden')
+  }
+  window.addEventListener('click',event=>{
+    for (const menu of menus_listeners_array)
+      if (menu?.title?.contains(event.target) || menu?.options?.contains(event.target))
+        menu.options?.classList.remove('hidden')
+      else if(!menu.options?.classList?.contains('hidden'))
+        menu.options?.classList.add('hidden')
+  })
 }
 
-enum direction {
-  Up,
-  Down,
-  Left,
-  Right
+var direction = {
+  Up:0,
+  Down:1,
+  Left:2,
+  Right:3
 }
 
 function scrollToTopSmoothly(containerElement, targetTop, duration) {
@@ -164,7 +178,7 @@ function scrollToClosestElementLeft(containerElement) {
   }
 }
 
-var dir: direction;
+var dir = direction;
 
 export function Scroll() {
   const styleElement = document.createElement('style');
@@ -212,12 +226,7 @@ export function Scroll() {
   });
 
   var t;
-  direction = {
-    Up:0,
-    Down:1,
-    Left:2,
-    Right:3
-  }
+
   function handleStop(container) {
     switch (dir) {
       case direction.Up:
