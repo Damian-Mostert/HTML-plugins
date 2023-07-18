@@ -459,7 +459,7 @@ export function Sliders() {
     var t;
 
     function handleRight(container) {
-      container.scrollLeft += 10;
+      container.scrollLeft -= 10;
       dir = direction.Left;
       if (t) clearTimeout(t);
       t = setTimeout(() => {
@@ -468,7 +468,7 @@ export function Sliders() {
     }
 
     function handleLeft(container) {
-      container.scrollLeft -= 10;
+      container.scrollLeft += 10;
       dir = direction.Right;
       if (t) clearTimeout(t);
       t = setTimeout(() => {
