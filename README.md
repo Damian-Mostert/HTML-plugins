@@ -1,3 +1,30 @@
+# HTML-plugins embed HTML
+```html
+<script type="module">
+  include Plugins from '/Plugins/index.js'  
+</script>
+```
+# HTML-plugins embed Angular
+```ts
+include Plugins from './Plugins'  
+export default class App{
+  ngOnInit(){
+    Plugins()
+  }
+}
+```
+# HTML-plugins embed React
+```jsx
+import Plugins from './Plugins/react'; 
+export default function App() {
+  return (
+    <div>
+        code here 
+      <Plugins/>
+    </div>
+  );
+}
+```
 # HTML-plugins cheatsheet
 
 ```html
