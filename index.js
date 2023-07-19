@@ -647,10 +647,10 @@ export function NavigationPanes(){
     const children= Array.from(element.querySelector('*[panes]')?.children) || []
     children.master = element.querySelector('*[master]')
     Array.from(navControl.children).forEach((element) => {
-      if(element.getAttribute('open')){
+      if(element.getAttribute('openIndex')){
         element.addEventListener('click',()=>{
           for(let child of children)child.hidden=true
-          children[element.getAttribute('open')].hidden = false
+          children[element.getAttribute('openIndex')].hidden = false
         })
       }
       for(let child of children)child.hidden=true
