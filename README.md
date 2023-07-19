@@ -147,3 +147,123 @@ height:100%;
   </div>
 </div>
 ```
+```jsx
+import React, { useState} from 'react';
+import Head from 'next/head';
+import styles from './Home.module.css';
+import Plugins from './Plugins/react';
+export default function Home() {
+  return (
+    <div className={styles.Body} app-container="true">
+      <Head>
+        <title>API</title>
+      </Head>
+        <div banner="top,80px small:1000,left,70px">
+          <h1>Banner</h1>
+        </div>
+        <div app="true" app-container="true" navigation-pane="true">
+          <div banner="top,40px" navigation="true">
+            <button openIndex="0">Pane A</button><button openIndex="1">Pane B</button><button openIndex="2">Pane C</button><button openIndex="3">Pane D</button>
+          </div>
+          <div panes="true" app="true">
+              <div master="true" box-pad="50px">
+              <h1>pane A Master</h1>
+                <div click-menu="true">
+                  <button title="true">click me</button>
+                  <div options="true">
+                    <li>option</li>
+                    <li>option</li>
+                    <li>option</li>
+                    when you click outside the menu it will close
+                  </div>
+                </div>
+                <div hover-menu="true">
+                  <button title="true">hover me</button>
+                  <div options="true">
+                    <li>option</li>
+                    <li>option</li>
+                    <li>option</li>
+                    when you click outside the menu it will close
+                  </div>
+                </div>
+                <div absolute-hover-menu="true">
+                  <button title="true">hover me</button>
+                  <div options="true">
+                    <li>option</li>
+                    <li>option</li>
+                    <li>option</li>
+                    when you hover outside the menu it will close
+                  </div>
+                </div>
+              </div>
+              <div box-pad="50px">
+                <h1>pane B</h1>
+                <div horozontal-scroll="true" no-scrollbar="true">
+                  <h1 horozontal="true" scroll-stop="true">
+                    test
+                  </h1>
+                  <h1 horozontal="true" scroll-stop="true">
+                    test2
+                  </h1>
+                  <h1 horozontal="true" scroll-stop="true">
+                    test3
+                  </h1>
+                  <h1 horozontal="true" scroll-stop="true">
+                    test4
+                  </h1>
+                </div>
+                <div vertical-scroll="true">
+                  <h1 scroll-stop="true">test</h1>
+                  <h1 scroll-stop="true">test2</h1>
+                  <h1 scroll-stop="true">test3</h1>
+                  <h1 scroll-stop="true">test4</h1>
+                </div>
+              </div>
+              <div box-pad="50px">
+                <h1>pane C</h1>
+                <div slider="true">
+                  <div horozontal-view="true">
+                    <div>
+                      SLIDE A
+                    </div>
+                    <div>
+                      SLIDE B
+                    </div>
+                    <div>
+                      SLIDE C
+                    </div>
+                    <div>
+                      SLIDE D
+                    </div>
+                  </div>
+                  <button prev="true">prev</button><button next="true">next</button>
+                </div>
+                <div slider="true">
+                  <div vertical-view="true">
+                    <div>
+                      SLIDE A
+                    </div>
+                    <div>
+                      SLIDE B
+                    </div>
+                    <div>
+                      SLIDE C
+                    </div>
+                    <div>
+                      SLIDE D
+                    </div>
+                  </div>
+                  <button prev="true">prev</button><button next="true">next</button>
+                </div>
+              </div>
+              <div box-pad="50px">
+                <h1>pane D</h1>
+              </div>
+          </div>
+        </div>
+      <Plugins/>
+    </div>
+  );
+}
+
+```
