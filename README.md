@@ -7,7 +7,7 @@
 ```
 # HTML-plugins embed Angular
 ```ts
-include Plugins from './Plugins'  
+import Plugins from './Plugins'  
 export default class App{
   ngOnInit(){
     Plugins()
