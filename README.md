@@ -1,7 +1,8 @@
 # HTML-plugins embed HTML
 ```html
 <script type="module">
-  include Plugins from '/Plugins/index.js'  
+  include Plugins from '/Plugins/index.js'
+  Plugins() 
 </script>
 ```
 # HTML-plugins embed Angular
