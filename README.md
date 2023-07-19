@@ -78,6 +78,24 @@ height:100%;
               when you hover outside the menu it will close
             </div>
           </div>
+          <div hover-drop="true">
+            <button title="true">hover me</button>
+              <div options="true">
+               <li>option</li>
+               <li>option</li>
+               <li>option</li>
+ this menu wont close after you hovered over its title
+              </div>
+             </div>
+            <div click-drop="true">
+              <button title="true">click me</button>
+                <div options="true">
+                 <li>option</li>
+                 <li>option</li>
+                 <li>option</li>
+                    this menu wont close after you clicked its title
+                </div>
+              </div>
         </div>
         <div box-pad="50px">
           <h1>pane B</h1>
