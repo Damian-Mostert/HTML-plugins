@@ -19,6 +19,8 @@ export function ClickMenus() {
     /*click-menu styles*/
     *[click-menu] *[title] { cursor: pointer; }
     *[click-menu] *[options].hidden { display: none; }
+    *[click-drop] *[title]{cursor:pointer}
+    *[click-drop] *[options].hidden{display: none}
   `;
   document.head.appendChild(styleElement);
 
@@ -34,7 +36,6 @@ export function ClickMenus() {
     if (menu.options)
       menu.options.classList.add('hidden');
   }
-
   window.addEventListener('click', event => {
     for (const menu of menus_listeners_array) {
       if (menu?.title?.contains(event.target) || menu?.options?.contains(event.target))
@@ -43,6 +44,18 @@ export function ClickMenus() {
         menu.options?.classList.add('hidden');
     }
   });
+  var menus_listeners_array2=[];
+  (document.querySelectorAll('*[click-drop]')||[]).forEach((menu)=>menus_listeners_array2.push({
+    title:menu.querySelector('*[title]'),
+    options:menu.querySelector('*[options]')
+  }))
+  for (const menu of menus_listeners_array2)
+    menu.options?.classList.add('hidden')
+  window.addEventListener('click',event=>{
+    for (const menu of menus_listeners_array2)
+      if (menu?.title?.contains(event.target) || menu?.options?.contains(event.target))
+        menu.options?.classList.remove('hidden')
+  })
 }
 
 export function HoverMenus(){
@@ -55,6 +68,8 @@ export function HoverMenus(){
   *[absolute-hover-menu] *[title]{cursor:pointer}
   *[absolute-hover-menu] *[options]{display: none}
   *[absolute-hover-menu]:hover *[options]{display:block}
+  *[hover-drop] *[title]{cursor:pointer}
+  *[hover-drop] *[options].hidden{display: none}
   `;
   document.head.appendChild(styleElement)
   var menus_listeners_array=[];
@@ -73,15 +88,22 @@ export function HoverMenus(){
       else if(!menu.options?.classList?.contains('hidden'))
         menu.options?.classList.add('hidden')
   })
+  var menus_listeners_array3=[];
+  (document.querySelectorAll('*[hover-drop]')||[]).forEach((menu)=>menus_listeners_array3.push({
+    title:menu.querySelector('*[title]'),
+    options:menu.querySelector('*[options]')
+  }))
+  for (const menu of menus_listeners_array3){
+    menu.title?.addEventListener("mouseover",() =>menu.options?.classList.remove('hidden'))
+    menu.options?.classList.add('hidden')
+  }
 }
-
 var direction = {
   Up:0,
   Down:1,
   Left:2,
   Right:3
 }
-
 function scrollToTopSmoothly(containerElement, targetTop, duration) {
   const startTop = containerElement.scrollTop;
   const distance = targetTop - startTop;
@@ -670,12 +692,12 @@ export function BoxPad(){
   })
 }
 export default function Plugins() {
-  InView();
-  ClickMenus();
-  HoverMenus();
-  Scroll();
-  Sliders();
-  BannerContainer();
-  NavigationPanes();
-  BoxPad();
+  InView()
+  ClickMenus()
+  HoverMenus()
+  Scroll()
+  Sliders()
+  BannerContainer()
+  NavigationPanes()
+  BoxPad()
 }

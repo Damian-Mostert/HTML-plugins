@@ -16,6 +16,8 @@ export function ClickMenus(){
   /*click-menu styles*/
   *[click-menu] *[title]{cursor:pointer}
   *[click-menu] *[options].hidden{display: none}
+  *[click-drop] *[title]{cursor:pointer}
+  *[click-drop] *[options].hidden{display: none}
   `;
   document.head.appendChild(styleElement)
   var menus_listeners_array:{ title:Element|null;options:Element|null }[]=[];
@@ -31,9 +33,21 @@ export function ClickMenus(){
       else if(!menu.options?.classList?.contains('hidden'))
         menu.options?.classList.add('hidden')
   })
+  var menus_listeners_array2:any=[];
+  (document.querySelectorAll('*[click-drop]')||[]).forEach((menu:Element)=>menus_listeners_array2.push({
+    title:menu.querySelector('*[title]') as HTMLDivElement,
+    options:menu.querySelector('*[options]') as HTMLDivElement
+  }))
+  for (const menu of menus_listeners_array2)
+    menu.options?.classList.add('hidden')
+  window.addEventListener('click',(event:any)=>{
+    for (const menu of menus_listeners_array2)
+      if (menu?.title?.contains(event.target as Node) || menu?.options?.contains(event.target as Node))
+        menu.options?.classList.remove('hidden')
+  })
 }
 export function HoverMenus(){
-  const styleElement:any = document.createElement('style');;
+  const styleElement = document.createElement('style');
   styleElement.textContent = `
   /*hover-menu styles*/
   *[hover-menu] *[title]{cursor:pointer}
@@ -42,12 +56,14 @@ export function HoverMenus(){
   *[absolute-hover-menu] *[title]{cursor:pointer}
   *[absolute-hover-menu] *[options]{display: none}
   *[absolute-hover-menu]:hover *[options]{display:block}
+  *[hover-drop] *[title]{cursor:pointer}
+  *[hover-drop] *[options].hidden{display: none}
   `;
   document.head.appendChild(styleElement)
-  var menus_listeners_array:{ title:Element|null;options:Element|null }[]=[];
-  (document.querySelectorAll('*[hover-menu]')||[]).forEach((menu:Element)=>menus_listeners_array.push({
-    title:menu.querySelector('*[title]')as HTMLDivElement,
-    options:menu.querySelector('*[options]')as HTMLDivElement
+  var menus_listeners_array=[];
+  (document.querySelectorAll('*[hover-menu]')||[]).forEach((menu)=>menus_listeners_array.push({
+    title:menu.querySelector('*[title]'),
+    options:menu.querySelector('*[options]')
   }))
   for (const menu of menus_listeners_array){
     menu.title?.addEventListener("mouseover",() =>menu.options?.classList.remove('hidden'))
@@ -55,11 +71,20 @@ export function HoverMenus(){
   }
   window.addEventListener('click',event=>{
     for (const menu of menus_listeners_array)
-      if (menu?.title?.contains(event.target as Node) || menu?.options?.contains(event.target as Node))
+      if (menu?.title?.contains(event.target) || menu?.options?.contains(event.target))
         menu.options?.classList.remove('hidden')
       else if(!menu.options?.classList?.contains('hidden'))
         menu.options?.classList.add('hidden')
   })
+  var menus_listeners_array3:any=[];
+  (document.querySelectorAll('*[hover-drop]')||[]).forEach((menu:Element)=>menus_listeners_array3.push({
+    title:menu.querySelector('*[title]'),
+    options:menu.querySelector('*[options]')
+  }))
+  for (const menu of menus_listeners_array3){
+    menu.title?.addEventListener("mouseover",() =>menu.options?.classList.remove('hidden'))
+    menu.options?.classList.add('hidden')
+  }
 }
 enum direction{
   Up,
