@@ -44,7 +44,7 @@ height:100%;
   <!--main app small-->
   <div app app-container navigation-pane>
     <div banner="top,40px" navigation><!--navigation banner-->
-      <button style="width:80px" open="0">Pane A</button><button style="width:80px" open="1">Pane B</button><button style="width:80px" open="2">Pane C</button><button style="width:80px" openIndex="3">Pane D</button>
+      <button style="width:80px" openIndex="0">Pane A</button><button style="width:80px" openIndex="1">Pane B</button><button style="width:80px" openIndex="2">Pane C</button><button style="width:80px" openIndex="3">Pane D</button>
     </div>
     <!--navigation panes-->
     <div panes app>
