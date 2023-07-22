@@ -546,6 +546,8 @@ export function BannerContainer(){
         ${conf.align}:${conf.height};
         ${get_op(conf.align)}:calc(100% - ${conf.height});
         ${get_opi_op(conf.align)}:100%;
+        overflow-y:auto;
+        overflow-x:auto;
       `
     }
     function SetSmall(){
@@ -560,6 +562,8 @@ export function BannerContainer(){
         ${conf.small.align}:${conf.small.height};
         ${get_op(conf.small.align)}:calc(100% - ${conf.small.height});
         ${get_opi_op(conf.small.align)}:100%;
+        overflow-y:auto;
+        overflow-x:auto;
       `
     }
     function Set(){
