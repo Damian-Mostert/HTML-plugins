@@ -335,7 +335,7 @@ slideshow options
     <button prev>prev</button><!--button for previos tab-->
     <button next>next</button><!--button for next tab-->
   </div>
-  <div slider touch-nav="true" wheel-nav="true"> <!--whell-nav will allow tab switching to happen with whell, same with touch but just with touch(mobile)-->
+  <div slider touch-nav="true" wheel-nav="true"> <!--wheel-nav will allow tab switching to happen with wheel, same with touch but just with touch swipes(mobile)-->
     <div vertical-view style="background: grey;width:100%;height:500px;">
       <div>
         SLIDE A
