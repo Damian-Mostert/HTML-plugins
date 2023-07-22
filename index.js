@@ -239,19 +239,23 @@ export function Scroll() {
     *[horozontal-scroll] {overflow-x: auto;white-space: nowrap;}
     *[horozontal] {display: inline-block;}
   `
+
   document.head.appendChild(styleElement)
   document
     .querySelectorAll("*[vertical-scroll],*[horozontal-scroll]")
     .forEach(scrollContainer => {
+      scrollContainer.scrollLeft = scrollContainer.scrollTop = 0
       scrollContainer.addEventListener("touchstart", handleTouchStart)
       scrollContainer.addEventListener("touchmove", handleTouchMoveVertical)
       scrollContainer.addEventListener("touchend", handleTouchEnd)
     })
   document.querySelectorAll("*[horozontal-scroll]").forEach(scrollContainer => {
+    scrollContainer.scrollLeft = scrollContainer.scrollTop = 0
     scrollContainer.addEventListener("wheel", handleScrollHorozontal)
     scrollContainer.addEventListener("touchmove", handleTouchMoveHorozontal)
   })
   document.querySelectorAll("*[vertical-scroll]").forEach(scrollContainer => {
+    scrollContainer.scrollLeft = scrollContainer.scrollTop = 0
     scrollContainer.addEventListener("wheel", handleScrollVertical)
     scrollContainer.addEventListener("touchmove", handleTouchMoveVertical)
   })
@@ -378,7 +382,6 @@ export function Sliders() {
     }
     function SetIndexus(index) {
       Array.from(indexes?.children || []).forEach((element, i) => {
-        console.log(element)
         if (index == i) element.classList.add("activeIndex")
         else element.classList.remove("activeIndex")
       })
@@ -392,6 +395,14 @@ export function Sliders() {
     )
     var LEFT = 0
     var TOP = 0
+    var timeout
+    function tloop() {
+      next_slide()
+      timeout = setTimeout(tloop, Number(element.getAttribute("timeout")))
+    }
+    if (element.getAttribute("timeout")) {
+      timeout = setTimeout(tloop, Number(element.getAttribute("timeout")))
+    }
     function next_slide() {
       if (type === "vertical") {
         TOP += view.getBoundingClientRect().height
@@ -419,6 +430,10 @@ export function Sliders() {
         Index = LEFT / view.getBoundingClientRect().width
       }
       SetIndexus(Index)
+      if (typeof timeout != "undefined") {
+        clearTimeout(timeout)
+        timeout = setTimeout(tloop, Number(element.getAttribute("timeout")))
+      }
     }
     function prev_slide() {
       if (type === "vertical") {
@@ -441,6 +456,10 @@ export function Sliders() {
         Index = LEFT / view.getBoundingClientRect().width
       }
       SetIndexus(Index)
+      if (typeof timeout != "undefined") {
+        clearTimeout(timeout)
+        timeout = setTimeout(tloop, Number(element.getAttribute("timeout")))
+      }
     }
 
     function handleStop(container) {
@@ -583,8 +602,8 @@ export function BannerContainer() {
     if (small_c?.[0]) conf.small.on = small_c?.[0]
     if (small_c?.[1]) conf.small.align = small_c?.[1]
     if (small_c?.[2]) conf.small.height = small_c?.[2]
-    function SetNormal(){
-      banner.style.bottom = banner.style.right = banner.style.left = banner.style.top = app.style.top = app.style.bottom= app.style.left = app.style.right = null
+    function SetNormal() {
+      banner.style.bottom = banner.style.right = banner.style.left = banner.style.top = app.style.top = app.style.bottom = app.style.left = app.style.right = null
       banner.style.position = "absolute"
       banner.style[conf.align] = "0"
       banner.style[get_op(conf.align)] = conf.height
@@ -596,8 +615,8 @@ export function BannerContainer() {
       app.style.overflowX = "auto"
       app.style.overflowY = "auto"
     }
-    function SetSmall(){
-      banner.style.bottom = banner.style.right = banner.style.left = banner.style.top = app.style.top = app.style.bottom= app.style.left = app.style.right = null
+    function SetSmall() {
+      banner.style.bottom = banner.style.right = banner.style.left = banner.style.top = app.style.top = app.style.bottom = app.style.left = app.style.right = null
       banner.style.position = "absolute"
       banner.style[conf.small.align] = "0"
       banner.style[get_op(conf.small.align)] = conf.small.height
@@ -635,24 +654,18 @@ export function NavigationPanes() {
     })
   })
 }
-export function BoxPad(){
-  document.querySelectorAll('*[box-pad]').forEach((element) => {
-    var inner_padding = element.getAttribute('box-pad')
-    element.style = `
-      position:relative;
-      width:calc(100% - calc(${inner_padding}) * 2);
-      height:calc(100% - calc(${inner_padding}) * 2);
-      padding:${inner_padding};
-    `
+export function BoxPad() {
+  document.querySelectorAll("*[box-pad]").forEach(element => {
+    var inner_padding = element.getAttribute("box-pad")
+    element.style.position = "relative"
+    element.style.width = element.style.height = `calc(100% - calc(${inner_padding}) * 2)`
+    element.style.padding = inner_padding
   })
-  document.querySelectorAll('*[absolute-box-pad]').forEach((element) => {
-    var inner_padding = element.getAttribute('absolute-box-pad')
-    element.style = `
-      position:absolute;
-      width:calc(100% - calc(${inner_padding}) * 2);
-      height:calc(100% - calc(${inner_padding}) * 2);
-      padding:${inner_padding};
-    `
+  document.querySelectorAll("*[absolute-box-pad]").forEach(element => {
+    var inner_padding = element.getAttribute("absolute-box-pad")
+    element.style.position = "absolute"
+    element.style.width = element.style.height = `calc(100% - calc(${inner_padding}) * 2)`
+    element.style.padding = inner_padding
   })
 }
 export default function Plugins() {
