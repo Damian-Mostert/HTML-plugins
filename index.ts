@@ -308,23 +308,11 @@ export function Sliders(){
   const styleElement:any = document.createElement('style');;
   styleElement.textContent = `
     *[slider] *[vertical-view]{
-      overflow-y:auto;
-      scrollbar-width: thin;
-      scrollbar-color: transparent transparent;
+      overflow-y:hidden;
     }
     *[slider] *[horozontal-view]{
-      overflow-x: auto;white-space: nowrap;
-      scrollbar-width: thin;
-      scrollbar-color: transparent transparent;
-    }
-    *[slider] *[horozontal-view]::-webkit-scrollbar,*[slider] *[vertical-view]::-webkit-scrollbar {
-      width:0;
-    }
-    *[slider] *[horozontal-view]::-webkit-scrollbar-track, *[slider] *[vertical-view]::-webkit-scrollbar-track {
-      background-color: transparent;
-    }
-    *[slider] *[horozontal-view]::-webkit-scrollbar-thumb,*[slider] *[vertical-view]::-webkit-scrollbar-thumb {
-      background-color: transparent;
+      overflow-x: hidden;
+      white-space: nowrap;
     }
     *[slider] .full-slider-view{
       width:100%;
@@ -382,13 +370,13 @@ export function Sliders(){
     function prev_slide() {
       if (type === 'vertical') {
         TOP -= view.getBoundingClientRect().height;
-        if (TOP < 0) TOP = 0;
+        if (TOP < 0) TOP = (view.getBoundingClientRect().height * view.children.length) - (view.getBoundingClientRect().height);
         scrollToTopSmoothly(view, TOP, 500);
         scrollToClosestElementTop(view);
         Index = TOP/view.getBoundingClientRect().height
       } else {
         LEFT -= view.getBoundingClientRect().width;
-        if (LEFT < 0) LEFT = 0;
+        if (LEFT < 0) LEFT = (view.getBoundingClientRect().width * view.children.length) - (view.getBoundingClientRect().width);
         scrollToLeftSmoothly(view, LEFT, 500);
         scrollToClosestElementLeft(view);
         Index = LEFT/view.getBoundingClientRect().width
@@ -499,8 +487,6 @@ export function Sliders(){
     if(element.getAttribute("wheel-nav")){
       view.addEventListener('wheel', handleScrollVertical)
       view.addEventListener('wheel', handleScrollHorozontal)
-    }else{
-      view.addEventListener('scroll', (e:any)=>e.preventDefault())
     }
     if(element.getAttribute("touch-nav")){
       view.addEventListener('touchstart', handleTouchStart)
