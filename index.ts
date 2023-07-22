@@ -339,12 +339,22 @@ export function Sliders(){
   document.querySelectorAll('*[slider]').forEach((element:any) => {
     const next_button:any = element?.querySelector('*[next]')
     const prev_button:any = element?.querySelector('*[prev]')
+    const indexes:any = element?.querySelector('*[indexes]')
+    var Index:number = 0
     var type = 'vertical'
     var view:any = element?.querySelector('*[vertical-view]')
     if(!view){
       view = element?.querySelector('*[horozontal-view]')
       type = 'horozontal'
     }
+    function SetIndexus(index:number){
+      Array.from(indexes?.children||[]).forEach((element:any,i:number) => {
+        console.log(element)
+        if(index == i)element.classList.add('activeIndex')
+        else element.classList.remove('activeIndex')
+      });
+    }
+    SetIndexus(0)
     view.scrollLeft = view.scrollTop = 0
     if(!view)
       throw new Error('slider requires horozontal-view or vertical-view')
@@ -354,36 +364,36 @@ export function Sliders(){
     function next_slide() {
       if (type === 'vertical') {
         TOP += view.getBoundingClientRect().height;
-        const maxScrollTop = (view.parentElement.scrollHeight - 1) * view.getBoundingClientRect().height;
-        TOP = Math.min(TOP, maxScrollTop);
+        if (TOP < 0) TOP = 0;
+        if (TOP > (view.getBoundingClientRect().height * view.children.length) - (view.getBoundingClientRect().height)) TOP = 0;
         scrollToTopSmoothly(view, TOP, 500);
         scrollToClosestElementTop(view);
-        if (TOP < 0) TOP = 0;
+        Index = TOP/view.getBoundingClientRect().height
       } else {
         LEFT += view.getBoundingClientRect().width;
-        const maxScrollLeft = (view.parentElement.scrollWidth - 1) * view.getBoundingClientRect().width;
-        LEFT = Math.min(LEFT, maxScrollLeft);
+        if (LEFT < 0) LEFT = 0;
+        if (LEFT > (view.getBoundingClientRect().width * view.children.length) - (view.getBoundingClientRect().width)) LEFT = 0;
         scrollToLeftSmoothly(view, LEFT, 500);
         scrollToClosestElementLeft(view);
-        if (LEFT < 0) LEFT = 0;
+        Index = LEFT/view.getBoundingClientRect().width
       }
+      SetIndexus(Index)
     }
     function prev_slide() {
       if (type === 'vertical') {
         TOP -= view.getBoundingClientRect().height;
-        TOP = Math.max(TOP, 0);
-        const maxScrollTop = view.getBoundingClientRect().height*(view.children.length-2);
-        TOP = Math.min(TOP, maxScrollTop);
+        if (TOP < 0) TOP = 0;
         scrollToTopSmoothly(view, TOP, 500);
         scrollToClosestElementTop(view);
+        Index = TOP/view.getBoundingClientRect().height
       } else {
         LEFT -= view.getBoundingClientRect().width;
-        LEFT = Math.max(LEFT, 0);
-        const maxScrollLeft = view.getBoundingClientRect().width*(view.children.length-2);
-        LEFT = Math.min(LEFT, maxScrollLeft);
+        if (LEFT < 0) LEFT = 0;
         scrollToLeftSmoothly(view, LEFT, 500);
         scrollToClosestElementLeft(view);
+        Index = LEFT/view.getBoundingClientRect().width
       }
+      SetIndexus(Index)
     }
 
     function handleStop(container:any) {
@@ -486,13 +496,19 @@ export function Sliders(){
       else
       handleDown(scrollContainer)
     }
-    view.addEventListener('touchstart', handleTouchStart)
-    view.addEventListener('touchmove', handleTouchMoveVertical)
-    view.addEventListener('touchend', handleTouchEnd)
-    view.addEventListener('wheel', handleScrollHorozontal)
-    view.addEventListener('touchmove', handleTouchMoveHorozontal)
-    view.addEventListener('wheel', handleScrollVertical)
-    view.addEventListener('touchmove', handleTouchMoveVertical)
+    if(element.getAttribute("wheel-nav")){
+      view.addEventListener('wheel', handleScrollVertical)
+      view.addEventListener('wheel', handleScrollHorozontal)
+    }else{
+      view.addEventListener('scroll', (e:any)=>e.preventDefault())
+    }
+    if(element.getAttribute("touch-nav")){
+      view.addEventListener('touchstart', handleTouchStart)
+      view.addEventListener('touchmove', handleTouchMoveVertical)
+      view.addEventListener('touchend', handleTouchEnd)
+      view.addEventListener('touchmove', handleTouchMoveHorozontal)
+      view.addEventListener('touchmove', handleTouchMoveVertical)
+    }
   })
 }
 export function BannerContainer(){
