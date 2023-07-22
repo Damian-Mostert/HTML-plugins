@@ -60,7 +60,7 @@ export function HoverMenus(){
   *[hover-drop] *[options].hidden{display: none}
   `;
   document.head.appendChild(styleElement)
-  var menus_listeners_array=[];
+  var menus_listeners_array:any=[];
   (document.querySelectorAll('*[hover-menu]')||[]).forEach((menu)=>menus_listeners_array.push({
     title:menu.querySelector('*[title]'),
     options:menu.querySelector('*[options]')
