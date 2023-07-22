@@ -285,3 +285,70 @@ export default function Home() {
 }
 
 ```
+slideshow options
+```html
+<style>
+/*set indexes active index styles*/
+*[indexes] .activeIndex{
+  color:red
+}
+</style>
+<h1>Contact</h1>
+  <div slider >
+    <div indexes>
+      <label>A</label>
+      <label>B</label>
+      <label>C</label>
+      <label>D</label>
+    </div>
+    <div horozontal-view style="background: grey;width:100%;height:500px;">
+      <div>
+        SLIDE A
+      </div>
+      <div>
+        SLIDE B
+      </div>
+      <div>
+        SLIDE C
+      </div>
+      <div>
+        SLIDE D
+      </div>
+    </div>
+    <button prev>prev</button><button next>next</button>
+  </div>
+  <div slider>
+    <div vertical-view style="background: grey;width:100%;height:500px;">
+      <div>
+        SLIDE A
+      </div>
+      <div>
+        SLIDE B
+      </div>
+      <div>
+        SLIDE C
+      </div>
+      <div>
+        SLIDE D
+      </div>
+    </div>
+    <button prev>prev</button><button next>next</button>
+  </div>
+  <div slider touch-nav="true" wheel-nav="true">
+    <div vertical-view style="background: grey;width:100%;height:500px;">
+      <div>
+        SLIDE A
+      </div>
+      <div>
+        SLIDE B
+      </div>
+      <div>
+        SLIDE C
+      </div>
+      <div>
+        SLIDE D
+      </div>
+    </div>
+    <button prev>prev</button><button next>next</button>
+  </div>
+```
