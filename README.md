@@ -294,7 +294,7 @@ slideshow options
 }
 </style>
 <h1>Contact</h1>
-  <div slider >
+  <div slider timeout="5000"><!--use timeout to auto next slides-->
     <div indexes>
       <label>A</label>
       <label>B</label>
