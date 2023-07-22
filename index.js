@@ -641,6 +641,17 @@ export function NavigationPanes() {
     })
   })
 }
+export function BoxPad(){
+  document.querySelectorAll('*[box-pad]').forEach((element) => {
+    var inner_padding = element.getAttribute('box-pad')
+    element.style = `
+      position:relative;
+      width:calc(100% - calc(${inner_padding}) * 2);
+      height:calc(100% - calc(${inner_padding}) * 2);
+      padding:${inner_padding};
+    `
+  })
+}
 export default function Plugins() {
   InView()
   ClickMenus()
@@ -649,4 +660,5 @@ export default function Plugins() {
   Sliders()
   BannerContainer()
   NavigationPanes()
+  BoxPad()
 }
