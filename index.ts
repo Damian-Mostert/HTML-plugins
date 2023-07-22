@@ -193,17 +193,21 @@ export function Scroll() {
     *[horozontal-scroll] {overflow-x: auto;white-space: nowrap;}
     *[horozontal] {display: inline-block;}
   `;
+
   document.head.appendChild(styleElement)
   document.querySelectorAll('*[vertical-scroll],*[horozontal-scroll]').forEach(scrollContainer => {
+    scrollContainer.scrollLeft = scrollContainer.scrollTop = 0
     scrollContainer.addEventListener('touchstart', handleTouchStart)
     scrollContainer.addEventListener('touchmove', handleTouchMoveVertical)
     scrollContainer.addEventListener('touchend', handleTouchEnd)
   })
   document.querySelectorAll('*[horozontal-scroll]').forEach(scrollContainer => {
+    scrollContainer.scrollLeft = scrollContainer.scrollTop = 0
     scrollContainer.addEventListener('wheel', handleScrollHorozontal)
     scrollContainer.addEventListener('touchmove', handleTouchMoveHorozontal)
   })
   document.querySelectorAll('*[vertical-scroll]').forEach(scrollContainer => {
+    scrollContainer.scrollLeft = scrollContainer.scrollTop = 0
     scrollContainer.addEventListener('wheel', handleScrollVertical)
     scrollContainer.addEventListener('touchmove', handleTouchMoveVertical)
   })
@@ -337,7 +341,6 @@ export function Sliders(){
     }
     function SetIndexus(index:number){
       Array.from(indexes?.children||[]).forEach((element:any,i:number) => {
-        console.log(element)
         if(index == i)element.classList.add('activeIndex')
         else element.classList.remove('activeIndex')
       });
@@ -349,6 +352,14 @@ export function Sliders(){
     Array.from(view.children).forEach((element:any) => element.classList.add('full-slider-view'))
     var LEFT = 0
     var TOP = 0
+    var timeout:any
+    function tloop(){
+      next_slide()
+      timeout = setTimeout(tloop,Number(element.getAttribute('timeout')))
+    }
+    if(element.getAttribute('timeout')){
+      timeout = setTimeout(tloop,Number(element.getAttribute('timeout')))
+    }
     function next_slide() {
       if (type === 'vertical') {
         TOP += view.getBoundingClientRect().height;
@@ -366,6 +377,10 @@ export function Sliders(){
         Index = LEFT/view.getBoundingClientRect().width
       }
       SetIndexus(Index)
+      if(typeof timeout!="undefined"){
+        clearTimeout(timeout)
+        timeout = setTimeout(tloop,Number(element.getAttribute('timeout')))
+      }
     }
     function prev_slide() {
       if (type === 'vertical') {
@@ -382,6 +397,10 @@ export function Sliders(){
         Index = LEFT/view.getBoundingClientRect().width
       }
       SetIndexus(Index)
+      if(typeof timeout!="undefined"){
+        clearTimeout(timeout)
+        timeout = setTimeout(tloop,Number(element.getAttribute('timeout')))
+      }
     }
 
     function handleStop(container:any) {
@@ -590,21 +609,15 @@ export function NavigationPanes(){
 export function BoxPad(){
   document.querySelectorAll('*[box-pad]').forEach((element:any) => {
     var inner_padding:any = element.getAttribute('box-pad')
-    element.style = `
-      position:relative;
-      width:calc(100% - calc(${inner_padding}) * 2);
-      height:calc(100% - calc(${inner_padding}) * 2);
-      padding:${inner_padding};
-    `
+    element.style.position = "relative"
+    element.style.width = element.style.height = `calc(100% - calc(${inner_padding}) * 2)`
+    element.style.padding=inner_padding
   })
   document.querySelectorAll('*[absolute-box-pad]').forEach((element:any) => {
     var inner_padding:any = element.getAttribute('absolute-box-pad')
-    element.style = `
-      position:absolute;
-      width:calc(100% - calc(${inner_padding}) * 2);
-      height:calc(100% - calc(${inner_padding}) * 2);
-      padding:${inner_padding};
-    `
+    element.style.position = "absolute"
+    element.style.width = element.style.height = `calc(100% - calc(${inner_padding}) * 2)`
+    element.style.padding=inner_padding
   })
 }
 export default function Plugins(){
