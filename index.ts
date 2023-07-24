@@ -701,15 +701,28 @@ export function BoxPad(){
     element.style.padding=inner_padding
   })
 }
-//timeline-vertical,timeline-horozontal plugin
-export function TimeLines(){
-  //for each vertical timeline
-  document.querySelectorAll('*[timeline-vertical]').forEach((element:any) => {
-
+//box-mar,absolute-box-mar,fixed-box-mar plugin
+export function BoxMar(){
+  //for every box pad
+  document.querySelectorAll('*[box-mar]').forEach((element:any) => {
+    var inner_padding:any = element.getAttribute('box-mar')
+    element.style.position = "relative"
+    element.style.width = element.style.height = `calc(100% - calc(${inner_padding} * 2))`
+    element.style.margin=inner_padding
   })
-  //for each horozontal timeline
-  document.querySelectorAll('*[timeline-horozontal]').forEach((element:any) => {
-
+  //for every absolute-box-pad
+  document.querySelectorAll('*[absolute-box-mar]').forEach((element:any) => {
+    var inner_padding:any = element.getAttribute('absolute-box-mar')
+    element.style.position = "absolute"
+    element.style.width = element.style.height = `calc(100% - calc(${inner_padding} * 2))`
+    element.style.margin=inner_padding
+  })
+  //for every fixed-box-pad
+  document.querySelectorAll('*[fixed-box-mar]').forEach((element:any) => {
+    var inner_padding:any = element.getAttribute('fixed-box-mar')
+    element.style.position = "fixed"
+    element.style.width = element.style.height = `calc(100% - calc(${inner_padding} * 2))`
+    element.style.margin=inner_padding
   })
 }
 export default function Plugins(){ // to load all
@@ -721,5 +734,5 @@ export default function Plugins(){ // to load all
   BannerContainer()
   NavigationPanes()
   BoxPad()
-  TimeLines()
+  BoxMar()
 }
