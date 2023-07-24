@@ -683,21 +683,21 @@ export function BoxPad(){
   document.querySelectorAll('*[box-pad]').forEach((element:any) => {
     var inner_padding:any = element.getAttribute('box-pad')
     element.style.position = "relative"
-    element.style.width = element.style.height = `calc(100% - calc(${inner_padding}) * 2)`
+    element.style.width = element.style.height = `calc(100% - calc(${inner_padding} * 2))`
     element.style.padding=inner_padding
   })
   //for every absolute-box-pad
   document.querySelectorAll('*[absolute-box-pad]').forEach((element:any) => {
     var inner_padding:any = element.getAttribute('absolute-box-pad')
     element.style.position = "absolute"
-    element.style.width = element.style.height = `calc(100% - calc(${inner_padding}) * 2)`
+    element.style.width = element.style.height = `calc(100% - calc(${inner_padding} * 2))`
     element.style.padding=inner_padding
   })
   //for every fixed-box-pad
   document.querySelectorAll('*[fixed-box-pad]').forEach((element:any) => {
     var inner_padding:any = element.getAttribute('fixed-box-pad')
     element.style.position = "fixed"
-    element.style.width = element.style.height = `calc(100% - calc(${inner_padding}) * 2)`
+    element.style.width = element.style.height = `calc(100% - calc(${inner_padding} * 2))`
     element.style.padding=inner_padding
   })
 }
