@@ -1,4 +1,6 @@
+//in-view plugin, to handle in view scroll animations
 export function InView() {
+  //funtion to check if element is in view
   function isScrolledIntoView(el) {
     var rect = el.getBoundingClientRect()
     return (
@@ -8,14 +10,23 @@ export function InView() {
         rect.right <= el.parentElement.getBoundingClientRect().width)
     )
   }
+  //for each in view
   document.querySelectorAll("*[in-view]").forEach(element => {
-    element.parentElement.addEventListener("wheel", () => {
-      if (isScrolledIntoView(element)) element.hidden = false
-      else element.hidden = true
-    })
+    //function to handle in view
+    function handleInViews() {
+      if (isScrolledIntoView(element)) element.classList.add("inView")
+      //add inView class
+      else element.classList.remove("inView") //remove Inview class
+    }
+    //call
+    handleInViews()
+    //element parent on scroll
+    element.parentElement.addEventListener("scroll", handleInViews)
   })
 }
+//click-menu,click-drop plugin
 export function ClickMenus() {
+  //create style element
   const styleElement = document.createElement("style")
   styleElement.textContent = `
   /*click-menu styles*/
@@ -24,18 +35,32 @@ export function ClickMenus() {
   *[click-drop] *[title]{cursor:pointer}
   *[click-drop] *[options].hidden{display: none}
   `
+  //append style element
   document.head.appendChild(styleElement)
-  var menus_listeners_array = []
+  //create arrays
+  var click_menus = []
+  var click_drops = []
+  //add all in click menu array
   ;(document.querySelectorAll("*[click-menu]") || []).forEach(menu =>
-    menus_listeners_array.push({
+    click_menus.push({
       title: menu.querySelector("*[title]"),
       options: menu.querySelector("*[options]")
     })
   )
-  for (const menu of menus_listeners_array)
+  //add all in click drop array
+  ;(document.querySelectorAll("*[click-drop]") || []).forEach(menu =>
+    click_drops.push({
+      title: menu.querySelector("*[title]"),
+      options: menu.querySelector("*[options]")
+    })
+  )
+  //add hidden class to all menus
+  for (const menu of [...click_drops, ...click_menus])
     menu.options?.classList.add("hidden")
+  //window on click
   window.addEventListener("click", event => {
-    for (const menu of menus_listeners_array)
+    //handle click menus
+    for (const menu of click_menus)
       if (
         menu?.title?.contains(event.target) ||
         menu?.options?.contains(event.target)
@@ -43,18 +68,8 @@ export function ClickMenus() {
         menu.options?.classList.remove("hidden")
       else if (!menu.options?.classList?.contains("hidden"))
         menu.options?.classList.add("hidden")
-  })
-  var menus_listeners_array2 = []
-  ;(document.querySelectorAll("*[click-drop]") || []).forEach(menu =>
-    menus_listeners_array2.push({
-      title: menu.querySelector("*[title]"),
-      options: menu.querySelector("*[options]")
-    })
-  )
-  for (const menu of menus_listeners_array2)
-    menu.options?.classList.add("hidden")
-  window.addEventListener("click", event => {
-    for (const menu of menus_listeners_array2)
+    //handle drop menus
+    for (const menu of click_drops)
       if (
         menu?.title?.contains(event.target) ||
         menu?.options?.contains(event.target)
@@ -62,7 +77,9 @@ export function ClickMenus() {
         menu.options?.classList.remove("hidden")
   })
 }
+//hover-menu,absolute-hover-menu,hover-drop plugin
 export function HoverMenus() {
+  //create style element
   const styleElement = document.createElement("style")
   styleElement.textContent = `
   /*hover-menu styles*/
@@ -76,21 +93,32 @@ export function HoverMenus() {
   *[hover-drop] *[options].hidden{display: none}
   `
   document.head.appendChild(styleElement)
-  var menus_listeners_array = []
+  //append style Element
+  var hover_menus = []
+  var hover_drops = []
+  //colect menus
   ;(document.querySelectorAll("*[hover-menu]") || []).forEach(menu =>
-    menus_listeners_array.push({
+    hover_menus.push({
       title: menu.querySelector("*[title]"),
       options: menu.querySelector("*[options]")
     })
   )
-  for (const menu of menus_listeners_array) {
+  ;(document.querySelectorAll("*[hover-drop]") || []).forEach(menu =>
+    hover_drops.push({
+      title: menu.querySelector("*[title]"),
+      options: menu.querySelector("*[options]")
+    })
+  )
+  //add hover listeners to all menus
+  for (const menu of [...hover_menus, ...hover_drops]) {
     menu.title?.addEventListener("mouseover", () =>
       menu.options?.classList.remove("hidden")
     )
     menu.options?.classList.add("hidden")
   }
+  //handle hover-menu clicks
   window.addEventListener("click", event => {
-    for (const menu of menus_listeners_array)
+    for (const menu of hover_menus)
       if (
         menu?.title?.contains(event.target) ||
         menu?.options?.contains(event.target)
@@ -99,19 +127,6 @@ export function HoverMenus() {
       else if (!menu.options?.classList?.contains("hidden"))
         menu.options?.classList.add("hidden")
   })
-  var menus_listeners_array3 = []
-  ;(document.querySelectorAll("*[hover-drop]") || []).forEach(menu =>
-    menus_listeners_array3.push({
-      title: menu.querySelector("*[title]"),
-      options: menu.querySelector("*[options]")
-    })
-  )
-  for (const menu of menus_listeners_array3) {
-    menu.title?.addEventListener("mouseover", () =>
-      menu.options?.classList.remove("hidden")
-    )
-    menu.options?.classList.add("hidden")
-  }
 }
 var direction
 
@@ -122,6 +137,9 @@ var direction
   direction[(direction["Right"] = 3)] = "Right"
 })(direction || (direction = {}))
 
+//dir
+var dir
+//scroll smoothly functions generated with Chat GPT
 function scrollToTopSmoothly(containerElement, targetTop, duration) {
   const startTop = containerElement.scrollTop
   const distance = targetTop - startTop
@@ -133,6 +151,24 @@ function scrollToTopSmoothly(containerElement, targetTop, duration) {
     const easing = easeInOutCubic(scrollProgress)
     const newScrollTop = startTop + distance * easing
     containerElement.scrollTop = newScrollTop
+    if (elapsed < duration) window.requestAnimationFrame(scrollStep)
+  }
+  function easeInOutCubic(t) {
+    return t < 0.5 ? 4 * t * t * t : (t - 1) * (2 * t - 2) * (2 * t - 2) + 1
+  }
+  window.requestAnimationFrame(scrollStep)
+}
+function scrollToLeftSmoothly(containerElement, targetLeft, duration) {
+  const startLeft = containerElement.scrollLeft
+  const distance = targetLeft - startLeft
+  const startTime = performance.now()
+  function scrollStep(timestamp) {
+    const currentTime = timestamp || performance.now()
+    const elapsed = currentTime - startTime
+    const scrollProgress = Math.min(elapsed / duration, 1)
+    const easing = easeInOutCubic(scrollProgress)
+    const newScrollLeft = startLeft + distance * easing
+    containerElement.scrollLeft = newScrollLeft
     if (elapsed < duration) window.requestAnimationFrame(scrollStep)
   }
   function easeInOutCubic(t) {
@@ -170,24 +206,6 @@ function scrollToClosestElementTop(containerElement) {
       100
     )
 }
-function scrollToLeftSmoothly(containerElement, targetLeft, duration) {
-  const startLeft = containerElement.scrollLeft
-  const distance = targetLeft - startLeft
-  const startTime = performance.now()
-  function scrollStep(timestamp) {
-    const currentTime = timestamp || performance.now()
-    const elapsed = currentTime - startTime
-    const scrollProgress = Math.min(elapsed / duration, 1)
-    const easing = easeInOutCubic(scrollProgress)
-    const newScrollLeft = startLeft + distance * easing
-    containerElement.scrollLeft = newScrollLeft
-    if (elapsed < duration) window.requestAnimationFrame(scrollStep)
-  }
-  function easeInOutCubic(t) {
-    return t < 0.5 ? 4 * t * t * t : (t - 1) * (2 * t - 2) * (2 * t - 2) + 1
-  }
-  window.requestAnimationFrame(scrollStep)
-}
 function scrollToClosestElementLeft(containerElement) {
   const containerRect = containerElement.getBoundingClientRect()
   const containerLeft = containerRect.left
@@ -195,7 +213,7 @@ function scrollToClosestElementLeft(containerElement) {
   let closestElement = null
   let closestDistance = Number.MAX_SAFE_INTEGER
   containerElement
-    .querySelectorAll("*[scroll-stop] , .full-slider-view")
+    .querySelectorAll("*[scroll-stop], .full-slider-view")
     .forEach(element => {
       const boundingRect = element.getBoundingClientRect()
       const distanceToContainerLeft =
@@ -218,8 +236,9 @@ function scrollToClosestElementLeft(containerElement) {
       100
     )
 }
-var dir
+//no-scrollbar.vertical-scroll,horozontal-scroll plugin
 export function Scroll() {
+  //create style Element
   const styleElement = document.createElement("style")
   styleElement.textContent = `
     *[no-scrollbar]{
@@ -239,8 +258,11 @@ export function Scroll() {
     *[horozontal-scroll] {overflow-x: auto;white-space: nowrap;}
     *[horozontal] {display: inline-block;}
   `
-
   document.head.appendChild(styleElement)
+  //appen style Element
+  let prevScrollLeft = 0
+  let prevScrollTop = 0
+  var T
   document
     .querySelectorAll("*[vertical-scroll],*[horozontal-scroll]")
     .forEach(scrollContainer => {
@@ -248,6 +270,7 @@ export function Scroll() {
       scrollContainer.addEventListener("touchstart", handleTouchStart)
       scrollContainer.addEventListener("touchmove", handleTouchMoveVertical)
       scrollContainer.addEventListener("touchend", handleTouchEnd)
+      scrollContainer.addEventListener("scroll", handleScroll)
     })
   document.querySelectorAll("*[horozontal-scroll]").forEach(scrollContainer => {
     scrollContainer.scrollLeft = scrollContainer.scrollTop = 0
@@ -273,41 +296,38 @@ export function Scroll() {
     }
   }
   function handleRight(container) {
-    container.scrollLeft += 10
+    container.scrollLeft += 100
     dir = direction.Left
     if (t) clearTimeout(t)
     t = setTimeout(() => {
       handleStop(container)
-    }, 100)
+    }, 500)
   }
   function handleLeft(container) {
-    container.scrollLeft -= 10
+    container.scrollLeft -= 100
     dir = direction.Right
     if (t) clearTimeout(t)
     t = setTimeout(() => {
       handleStop(container)
-    }, 100)
+    }, 500)
   }
   function handleDown(container) {
-    container.scrollTop -= 10
     dir = direction.Up
     if (t) clearTimeout(t)
     t = setTimeout(() => {
       handleStop(container)
-    }, 100)
+    }, 500)
   }
   function handleUp(container) {
-    container.scrollTop += 10
     dir = direction.Down
     if (t) clearTimeout(t)
     t = setTimeout(() => {
       handleStop(container)
-    }, 100)
+    }, 500)
   }
   let touchStartX = 0
   let touchStartY = 0
   function handleTouchStart(event) {
-    event.preventDefault()
     touchStartX = event.touches[0].clientX
     touchStartY = event.touches[0].clientY
   }
@@ -323,6 +343,20 @@ export function Scroll() {
       if (deltaX > 0) handleRight(scrollContainer)
       else handleLeft(scrollContainer)
   }
+  function handleScroll(event) {
+    const currentScrollLeft = event.target.scrollLeft
+    const currentScrollTop = event.target.scrollTop
+    if (currentScrollLeft > prevScrollLeft) dir = direction.Right
+    else if (currentScrollLeft < prevScrollLeft) dir = direction.Left
+    if (currentScrollTop > prevScrollTop) dir = direction.Up
+    else if (currentScrollTop < prevScrollTop) dir = direction.Down
+    if (T) clearTimeout(T)
+    T = setTimeout(() => {
+      handleStop(event.target)
+    }, 500)
+    prevScrollLeft = currentScrollLeft
+    prevScrollTop = currentScrollTop
+  }
   function handleScrollHorozontal(event) {
     event.preventDefault()
     const deltaY = event.deltaY
@@ -331,14 +365,12 @@ export function Scroll() {
     else if (deltaY > 0) handleLeft(scrollContainer)
   }
   function handleScrollVertical(event) {
-    event.preventDefault()
     const deltaY = event.deltaY
     const scrollContainer = event.currentTarget
     if (deltaY < 0) handleDown(scrollContainer)
     else if (deltaY > 0) handleUp(scrollContainer)
   }
   function handleTouchMoveVertical(event) {
-    event.preventDefault()
     const scrollContainer = event.currentTarget
     const touchX = event.touches[0].clientX
     const touchY = event.touches[0].clientY
@@ -349,6 +381,7 @@ export function Scroll() {
     else handleDown(scrollContainer)
   }
 }
+//slider plugin
 export function Sliders() {
   const styleElement = document.createElement("style")
   styleElement.textContent = `
@@ -461,7 +494,6 @@ export function Sliders() {
         timeout = setTimeout(tloop, Number(element.getAttribute("timeout")))
       }
     }
-
     function handleStop(container) {
       switch (dir) {
         case direction.Up:
@@ -566,11 +598,26 @@ export function Sliders() {
     }
   })
 }
+//app-container plugin
+//op functions
+function get_op(t) {
+  if (t == "top" || t == "bottom") return "height"
+  if (t == "left" || t == "right") return "width"
+  return ""
+}
+function get_opi_op(t) {
+  if (t == "top" || t == "bottom") return "width"
+  if (t == "left" || t == "right") return "height"
+  return ""
+}
+//function
 export function BannerContainer() {
+  //for each app conrainer
   ;(document.querySelectorAll("*[app-container]") || []).forEach(element => {
     const banner = element.querySelector("*[banner]")
     const app = element.querySelector("*[app]")
     const bannerConfStr = banner.getAttribute("banner")
+    //defualt config
     const conf = {
       align: "top",
       height: "80px",
@@ -580,19 +627,9 @@ export function BannerContainer() {
         height: "60px"
       }
     }
-    function get_op(t) {
-      if (t == "top" || t == "bottom") return "height"
-      if (t == "left" || t == "right") return "width"
-      return ""
-    }
-    function get_opi_op(t) {
-      if (t == "top" || t == "bottom") return "width"
-      if (t == "left" || t == "right") return "height"
-      return ""
-    }
+    //build config
     var sml_splited = bannerConfStr.split("small:")
-    var c
-    var small_c
+    var c, small_c
     if (sml_splited?.[1]) {
       c = sml_splited[0].split(",")
       small_c = sml_splited[1].split(",")
@@ -602,8 +639,11 @@ export function BannerContainer() {
     if (small_c?.[0]) conf.small.on = small_c?.[0]
     if (small_c?.[1]) conf.small.align = small_c?.[1]
     if (small_c?.[2]) conf.small.height = small_c?.[2]
+    //function to set nurmal styles
     function SetNormal() {
-      banner.style.bottom = banner.style.right = banner.style.left = banner.style.top = app.style.top = app.style.bottom = app.style.left = app.style.right = null
+      //clear styles
+      banner.style.width = banner.style.height = banner.style.bottom = banner.style.right = banner.style.left = banner.style.top = app.style.width = app.style.height = app.style.top = app.style.bottom = app.style.left = app.style.right = null
+      //set new styles
       banner.style.position = "absolute"
       banner.style[conf.align] = "0"
       banner.style[get_op(conf.align)] = conf.height
@@ -615,8 +655,11 @@ export function BannerContainer() {
       app.style.overflowX = "auto"
       app.style.overflowY = "auto"
     }
+    //function to set small styles
     function SetSmall() {
-      banner.style.bottom = banner.style.right = banner.style.left = banner.style.top = app.style.top = app.style.bottom = app.style.left = app.style.right = null
+      //clear styles
+      banner.style.width = banner.style.height = banner.style.bottom = banner.style.right = banner.style.left = banner.style.top = app.style.width = app.style.height = app.style.top = app.style.bottom = app.style.left = app.style.right = null
+      //set new styles
       banner.style.position = "absolute"
       banner.style[conf.small.align] = "0"
       banner.style[get_op(conf.small.align)] = conf.small.height
@@ -628,6 +671,7 @@ export function BannerContainer() {
       app.style.overflowX = "auto"
       app.style.overflowY = "auto"
     }
+    //function to check window size and call correct style
     function Set() {
       if (window.innerWidth <= Number(conf.small.on)) SetSmall()
       else SetNormal()
@@ -636,39 +680,80 @@ export function BannerContainer() {
     Set()
   })
 }
+//navigation-pane plugin
 export function NavigationPanes() {
+  //for each navigation-pane
   document.querySelectorAll("*[navigation-pane]").forEach(element => {
-    const navControl = element.querySelector("*[navigation]")
-    const children =
-      Array.from(element.querySelector("*[panes]")?.children) || []
-    children.master = element.querySelector("*[master]")
-    Array.from(navControl.children).forEach(element => {
+    //get element navigation
+    const navigation = element.querySelector("*[navigation]")
+    const panes = Array.from(element.querySelector("*[panes]")?.children) || []
+    var masterIndex = 0
+    //get master index
+    for (let i = 0; i < panes.length; i++)
+      if (panes[i] === element.querySelector("*[master]")) masterIndex = i
+    //set panes master
+    panes.master = element.querySelector("*[master]")
+    var IndexElements = []
+    var x = 0
+    //for each of navigation children
+    Array.from(navigation.children).forEach(element => {
+      //if element has openIndex
       if (element.getAttribute("openIndex")) {
+        //add to IndexElements
+        IndexElements.push(element)
+
+        if (x == masterIndex) element.classList.add("activeIndex")
+
+        //handle open nav
         element.addEventListener("click", () => {
-          for (let child of children) child.hidden = true
-          children[element.getAttribute("openIndex")].hidden = false
+          IndexElements.forEach(element =>
+            element.classList.remove("activeIndex")
+          ) // remove all active index classes
+          element.classList.add("activeIndex") //add active index class to element
+          for (let child of panes) child.hidden = true //hide all
+          panes[element.getAttribute("openIndex")].hidden = false //show this index
         })
+
+        x++
       }
-      for (let child of children) child.hidden = true
-      if (children.master) children.master.hidden = false
     })
+    for (let child of panes) child.hidden = true //hide all
+    if (panes.master) panes.master.hidden = false //show master
   })
 }
+//box-pad,absolute-box-pad,fixed-box-pad plugin
 export function BoxPad() {
+  //for every box pad
   document.querySelectorAll("*[box-pad]").forEach(element => {
     var inner_padding = element.getAttribute("box-pad")
     element.style.position = "relative"
     element.style.width = element.style.height = `calc(100% - calc(${inner_padding}) * 2)`
     element.style.padding = inner_padding
   })
+  //for every absolute-box-pad
   document.querySelectorAll("*[absolute-box-pad]").forEach(element => {
     var inner_padding = element.getAttribute("absolute-box-pad")
     element.style.position = "absolute"
     element.style.width = element.style.height = `calc(100% - calc(${inner_padding}) * 2)`
     element.style.padding = inner_padding
   })
+  //for every fixed-box-pad
+  document.querySelectorAll("*[fixed-box-pad]").forEach(element => {
+    var inner_padding = element.getAttribute("fixed-box-pad")
+    element.style.position = "fixed"
+    element.style.width = element.style.height = `calc(100% - calc(${inner_padding}) * 2)`
+    element.style.padding = inner_padding
+  })
+}
+//timeline-vertical,timeline-horozontal plugin
+export function TimeLines() {
+  //for each vertical timeline
+  document.querySelectorAll("*[timeline-vertical]").forEach(element => {})
+  //for each horozontal timeline
+  document.querySelectorAll("*[timeline-horozontal]").forEach(element => {})
 }
 export default function Plugins() {
+  // to load all
   InView()
   ClickMenus()
   HoverMenus()
@@ -677,4 +762,5 @@ export default function Plugins() {
   BannerContainer()
   NavigationPanes()
   BoxPad()
+  TimeLines()
 }
